@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Template • TodoMVC</title>
+	<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+	<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+	<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<section class="todoapp" id="app">
+	<!--头部-->
+	<header class="header">
+		<h1>todos</h1>
+		<!--@keyup.13 : 按键修饰符-->
+		<input @keyup.13="addTodo" class="new-todo" placeholder="What needs to be done?" autofocus v-model="todoName">
+	</header>
+	<!--列表部分-->
+	<section class="main">
+		<input id="toggle-all" class="toggle-all" type="checkbox">
+		<label for="toggle-all">Mark all as complete</label>
+		<ul class="todo-list">
+			<!-- v-for 遍历列表 -->
+			<!--	completed （完成任务样式）: item.done : 根据 true 和false 判断是否执行 completed样式		editing（编辑样式） : item.id == editId : 根据true和false 判断是否执行 editing样式	-->
+			<li :class="{ completed : item.done, editing : item.id == editId }" v-for="item in list" :key="item.id">
+				<div class="view">
+					<!--v-model="item.done" 根据 done中的布尔值 判断是否选中 -->
+					<input @input="stateChange(item.id)" class="toggle" type="checkbox" v-model="item.done">
+					<!--dblclick : 双击点击事件-->
+					<label @dblclick="showEdit(item.id)">{{ item.name }}</label>
+					<!--删除任务-->
+					<button @click="delTodo(item.id)" class="destroy"></button>
+				</div>
+				<input @keyup.enter="hideEdit" class="edit" v-model="item.name">
+			</li>
+		</ul>
+	</section>
+	<!--底部-->
+	<!--方式1 ： v-show="list.length > 0 : 判断列表长度是否大于0，大于则显示底部-->
+	<!--<footer class="footer" v-show="list.length > 0">-->
+	<footer class="footer" v-show="isFooterShow1">
+		<span class="todo-count"><strong>{{ itemLeftCount }}</strong> item left</span>
+		<ul class="filters">
+			<li>
+				<a class="selected" href="#/">All</a>
+			</li>
+			<li>
+				<a href="#/active">Active</a>
+			</li>
+			<li>
+				<a href="#/completed">Completed</a>
+			</li>
+		</ul>
+		<button @click="clearCompleted" v-show="isClearCompletedShow" class="clear-completed">Clear completed</button>
+	</footer>
+</section>
+
+<!--引入的js-->
+<script src="node_modules/todomvc-common/base.js"></script>
+<!--引入vue-->
+<script src="node_modules/vue/dist/vue.js"></script>
+<!--引入axios-->
+<script src="node_modules/axios/dist/axios.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
